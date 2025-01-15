@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/index.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container" style="background-color: aliceblue;">
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+            <ul>
+                <li><a href="/predict">Predict</a></li>
+                <li><a href="/analysis">Analysis</a></li>
+                <li><a href="/charts">Charts</a></li>
+            </ul>
+            <ul>
+                <!-- <li><a href="/contact">Contact</a></li> -->
+                <input type="text" placeholder="Search..">
+            </ul>
+        </nav>
+        <div class="predict-body">
+            <center>
+                <h2>Predict a Disease</h2>
+                <div class="image_preview">
+                    <!-- <img src="{{image_path}}" alt="Insert a Photo" class="center"style="width:505px;height:305px"> -->
+                    {% if image_path %}
+                    <img src="{{ image_path }}" alt="Insert a Photo" class="center" style="width:505px;height:305px">
+                    {% else %}
+                    <img src="../static/images/default3.png" alt="Default Image Not Show" class="center" style="width:505px;height:305px">
+                    <!-- <img src="../static/images/cnf3.png" style="height: 600px;width: 700px;"> -->
+                {% endif %}
+                </div>
+                {% if image_path %}
+                <!-- <img id="output-image" class="rounded mx-auto d-block" /> -->
+                {% endif %}
+                <form class="p-3 text-center" action='/predict', method="post" enctype="multipart/form-data">
+                    <input class="chose_file" type="file" name="imagefile" required ><br>
+                    <input class="predict"type="submit" value="Predict Image">
+                </form>
+                {% if prediction %}
+                    <h1 style="color: red;font-size: 35px;"> {{prediction}}</h1>
+                    {% if prediction=='brown_spot'%}
+                    <p style="background-color: #dcd9d9; border-radius: 10px; padding: 15px;font-size: 25px;margin-left: 100px; margin-right: 100px;">
+                        Use fungicides (e.g., iprodione, propiconazole, azoxystrobin, trifloxystrobin, and carbendazim) as seed treatments.
+                    </p>
+                    {% elif prediction=='bacterial_leaf_blight'%}
+                    <p style="background-color: #dcd9d9; border-radius: 10px; padding: 15px;font-size: 25px;margin-left: 100px; margin-right: 100px;">
+                        Spray Streptomycin sulphate + Tetracycline combination 300 g + Copper oxychloride 1.25kg/ha. If necessary repeat 15 days later. Application of bleaching powder @ 5 kg/ha in the irrigation water is recommended in the kresek stage.
+                    </p>
+                    {% elif prediction=='leaf_blast'%}
+                    <p style="background-color: #dcd9d9; border-radius: 10px; padding: 15px;font-size: 25px;margin-left: 100px; margin-right: 100px;">
+                        Leaf blast in rice can be managed through cultural practices like proper irrigation and planting resistant varieties. Fungicide application during critical growth stages and sanitation measures such as removing infected plant debris are also effective remedies.
+                    </p>
+                    {% elif prediction=='leaf_scald'%}
+                    <p style="background-color: #dcd9d9; border-radius: 10px; padding: 15px;font-size: 25px;margin-left: 100px; margin-right: 100px;">
+                        Foliar sprays with fungicides based on mancozeb, thiophanate methyl @1.0g/l or copper oxychloride significantly reduce the incidence and severity of leaf scald. Combinations of these chemicals are also effective.
+                    </p>
+                    {% elif prediction=='narrow_brown_spot'%}
+                    <p style="background-color: #dcd9d9; border-radius: 10px; padding: 15px;font-size: 25px;margin-left: 100px; margin-right: 100px;">
+                        Remove weeds and weedy rice in the field and nearby areas to remove alternate hosts that allow the fungus to survive and infect new rice crops. Use balanced nutrients; make sure that adequate potassium is used. If narrow brown spot poses a risk to the field, spray propiconazole at booting to heading stages.
+                    </p>
+                    {% else %}
+                    <p>But this leaf is unknown.</p>
+                    {% endif %}
+                {% endif %}
+            </center>
+        </div>
+        
+    </div>
+    <script>
+        function previewImage(event) {
+          var reader = new FileReader();
+          reader.onload = function () {
+            var output = document.getElementById('output-image')
+            output.src = reader.result;
+          }
+          reader.readAsDataURL(event.target.files[0]);
+        }
+      </script>
+</body>
+</html>
